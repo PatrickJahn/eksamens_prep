@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/PatrickJahn/ca3_personal.svg?branch=master)](https://travis-ci.org/PatrickJahn/ca3_personal)
+[![Build Status](https://travis-ci.org/PatrickJahn/eksamens_prep.svg?branch=master)](https://travis-ci.org/PatrickJahn/eksamens_prep)
 
 # OBS Link til frontend del:  https://github.com/PatrickJahn/ca3_pesonal_frontend
 
