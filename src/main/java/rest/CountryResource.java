@@ -7,6 +7,7 @@ import facades.LikedMovieFacade;
 import facades.RemoteServerFacade;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -59,6 +60,15 @@ public class CountryResource {
         
        return remoteFACADE.getAllCategories();
     }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("categoriesp")
+    public String allCountriesParallel() throws IOException, InterruptedException, ExecutionException {
+        
+       return remoteFACADE.getAllCategoriesParrallel();
+    }
+    
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)

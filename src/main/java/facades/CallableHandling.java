@@ -7,7 +7,9 @@ package facades;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.categoryDTO;
 import dto.characterDTO;
+import dto.drinksCategoryDTO;
 import dto.filmDTO;
 import dto.planetDTO;
 import java.util.List;
@@ -25,6 +27,42 @@ import utils.HttpUtils;
     være flere classes i samme fil. Dette gør dog også at man
         kun kan bruge dem i samme package - "facades". */
 
+
+class FoodHandler implements Callable<categoryDTO>{
+        Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+        String categoryUrl;
+        public FoodHandler(String url){
+            this.categoryUrl = url;
+        }
+        
+        @Override
+        public categoryDTO call() throws Exception {
+     
+            String data = HttpUtils.fetchData(categoryUrl);
+            categoryDTO categorys = GSON.fromJson(data, categoryDTO.class);
+                
+            return categorys;
+        }
+        
+    }
+
+class DrinkHandler implements Callable<drinksCategoryDTO>{
+        Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+        String categoryUrl;
+        public DrinkHandler(String url){
+            this.categoryUrl = url;
+        }
+        
+        @Override
+        public drinksCategoryDTO call() throws Exception {
+     
+            String data = HttpUtils.fetchData(categoryUrl);
+            drinksCategoryDTO categorys = GSON.fromJson(data, drinksCategoryDTO.class);
+                
+            return categorys;
+        }
+        
+    }
 
      class PlanetHandler implements Callable<planetDTO>{
         Gson GSON = new GsonBuilder().setPrettyPrinting().create();

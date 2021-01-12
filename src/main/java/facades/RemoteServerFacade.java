@@ -105,6 +105,33 @@ public class RemoteServerFacade {
     
     }
             
+    
+    public String getAllCategoriesParrallel() throws IOException, InterruptedException, ExecutionException{
+        return GSON.toJson(giveThreadsWorkGetCategories());
+    }
+       private combinedCatDTO giveThreadsWorkGetCategories() throws InterruptedException, ExecutionException {
+          ExecutorService executor = Executors.newCachedThreadPool();
+          List<Future<String>> categoryFutures = new ArrayList<>();
+          String foodUrl = "https://www.themealdb.com/api/json/v1/1/categories.php";
+          String drinkUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list";
+          
+          Future foodFuture = executor.submit(new FoodHandler(foodUrl));
+          Future drinkFuture = executor.submit(new DrinkHandler(drinkUrl));
+          
+          categoryFutures.add(foodFuture);
+          categoryFutures.add(drinkFuture);
+          
+          categoryDTO food = (categoryDTO) foodFuture.get();
+          drinksCategoryDTO drinks = (drinksCategoryDTO) drinkFuture.get();
+
+          combinedCatDTO combined = new combinedCatDTO(food.getCategories(), drinks.getDrinks());
+         
+         
+         return combined;    
+     }
+    
+    
+    
     // Sequntial metode til at hente film
     public String getAllFilms() throws IOException, API_Exception{
         
