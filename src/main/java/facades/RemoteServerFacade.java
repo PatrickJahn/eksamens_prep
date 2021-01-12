@@ -7,9 +7,16 @@ package facades;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.categoryDTO;
 import dto.characterDTO;
+import dto.combinedCatDTO;
 import dto.filmDTO;
 import dto.combinedDTO;
+import dto.drinkInfoDTO;
+import dto.drinksCategoryDTO;
+import dto.drinksDTO;
+import dto.mealDTO;
+import dto.mealInfoDTO;
 import dto.planetDTO;
 import errorhandling.API_Exception;
 import java.io.IOException;
@@ -19,10 +26,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import utils.HttpUtils;
-import entities.LikedMovie;
 
 /**
  *
@@ -51,7 +56,55 @@ public class RemoteServerFacade {
     }
     
     
+    public String getAllCategories() throws IOException{
+
+        String foodCatJson = HttpUtils.fetchData("https://www.themealdb.com/api/json/v1/1/categories.php");
+        categoryDTO foodDto = GSON.fromJson(foodCatJson, categoryDTO.class);
+        
+         String drinkCatJson = HttpUtils.fetchData("https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list");
+        drinksCategoryDTO drinkDto = GSON.fromJson(drinkCatJson, drinksCategoryDTO.class);
+        
+        combinedCatDTO combined = new combinedCatDTO(foodDto.getCategories(), drinkDto.getDrinks());
+        
+        return GSON.toJson(combined);
+    }
     
+    
+    public String getMealByCategory(String category) throws IOException{
+          String mealJson = HttpUtils.fetchData("https://www.themealdb.com/api/json/v1/1/filter.php?c=" + category);
+   
+            mealDTO meals = GSON.fromJson(mealJson, mealDTO.class);
+            
+            return GSON.toJson(meals.getMeals());
+    
+    }
+    
+     public String getDrinksByCategory(String category) throws IOException{
+          String drinksJson = HttpUtils.fetchData("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=" + category);
+   
+            drinksDTO drinks = GSON.fromJson(drinksJson, drinksDTO.class);
+            
+            return GSON.toJson(drinks.getDrinks());
+    
+    }
+    
+     public String getDrinkInfo(String id) throws IOException {
+          String drinkJson = HttpUtils.fetchData("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=" + id);
+   
+            drinkInfoDTO drinkInfo = GSON.fromJson(drinkJson, drinkInfoDTO.class);
+            
+            return GSON.toJson(drinkInfo.getDrinks());
+     }
+     
+    public String getMealInfo(String id) throws IOException{
+          String mealJson = HttpUtils.fetchData("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + id);
+   
+            mealInfoDTO mealInfo = GSON.fromJson(mealJson, mealInfoDTO.class);
+            
+            return GSON.toJson(mealInfo.getMeals());
+    
+    }
+            
     // Sequntial metode til at hente film
     public String getAllFilms() throws IOException, API_Exception{
         
